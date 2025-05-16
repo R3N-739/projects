@@ -137,7 +137,7 @@ public:
 
         //Loop through and print each card
         for (const auto& card : cards) {
-            cout << "[" << card.toString() << "], ";
+            cout << "[" << card.toString() << "] ";
         }
         //Print total value of hand
         cout << " Total: " << total << endl;
@@ -157,17 +157,25 @@ class Dealer : public Hand {
             cout << name << "'s hand: ";
 
             int i = 0;  //int to count first card, for hiding
+
             //Loop through and print each card
             for (const auto& card : cards) {
                 //If hiding first card = true, print HIDDEN
                 //Else orint card normally
                 if (hideFirst && i++ == 0) {
-                    cout << "[Hidden], ";
+                    cout << "[Hidden] ";
                 } else {
-                    cout << "[" << card.toString() << "], ";
+                    cout << "[" << card.toString() << "] ";
                 }
             }
-            cout << (hideFirst ? "" : " Total: " + to_string(get_total())) << endl;
+            //IF hiding first card do not print total
+            //Else print total value of dealers hand
+            if(!hideFirst) {
+                cout << ""; //Print hidden card
+            } else { 
+                cout << " Total: " + to_string(get_total());
+            }
+            cout << endl;
         }
 };
 
@@ -269,46 +277,62 @@ class BlackjackGame {
         queue<string> turnOrder;
         map<string, int> stats;
         set<string> bustedPlayers;
+        Bank bank;
+        Bets bets;
     
     public:
-
-        //Start a new game
         void start() {
-
-            //Initialize game stats
             stats["Wins"] = 0;
             stats["Losses"] = 0;
             stats["Ties"] = 0;
     
+            bank.addAccount("You", 1000);
+    
             while (true) {
-                playRound();
+                try {
+                    playRound();
+                } catch (const exception& e) {
+                    cerr << "Error: " << e.what() << endl;
+                    break;
+                }
+    
                 char choice;
                 cout << "\nPlay another round? (y/n): ";
                 cin >> choice;
                 if (tolower(choice) != 'y') break;
                 player.clear();
                 dealer.clear();
+                bets.clearBets();
             }
     
             cout << "\nFinal Stats:\n";
             for (const auto& [key, val] : stats)
                 cout << key << ": " << val << "\n";
+    
+            bank.printBalances();
         }
     
         void playRound() {
-            turnOrder.push("Player");
-            turnOrder.push("Dealer");
+            cout << "\n--- New Round ---\n";
+            cout << "Current Balance: $" << bank.getBalance("You") << endl;
     
-            //Initial deal
+            int bet;
+            cout << "Place your bet: $";
+            cin >> bet;
+    
+            bank.withdraw("You", bet);
+            bets.placeBet("You", bet);
+    
+            // Initial deal
             for (int i = 0; i < 2; ++i) {
                 player.addCard(deck.draw());
                 dealer.addCard(deck.draw());
             }
     
-            // Player's turn
             player.printHand();
             dealer.printHand(true);
     
+            // Player's turn
             while (true) {
                 if (player.get_total() >= 21) break;
                 cout << "Hit or Stay? (h/s): ";
@@ -324,7 +348,7 @@ class BlackjackGame {
     
             // Bust check
             if (player.get_total() > 21) {
-                bustedPlayers.insert("Player");
+                bustedPlayers.insert("You");
                 cout << "You busted!\n";
                 stats["Losses"]++;
                 return;
@@ -340,29 +364,30 @@ class BlackjackGame {
             }
             dealer.printHand();
     
-            // Determine result
+            // Result
             int pt = player.get_total();
             int dt = dealer.get_total();
+            int playerBet = bets.getBet("You");
     
             if (dt > 21 || pt > dt) {
                 cout << "You win!\n";
                 stats["Wins"]++;
+                bank.deposit("You", playerBet * 2);
             } else if (pt == dt) {
                 cout << "It's a tie.\n";
                 stats["Ties"]++;
+                bank.deposit("You", playerBet);
             } else {
                 cout << "Dealer wins.\n";
                 stats["Losses"]++;
             }
-    
-            bustedPlayers.clear();
         }
-};
+    };
     
-
-//MAIN
-int main() {
-    BlackjackGame game;
-    game.start();
-    return 0;
-}
+    //MAIN FUNCTION
+    int main() {
+        BlackjackGame game;
+        game.start();
+        return 0;
+    }
+    

@@ -5,6 +5,8 @@
         "vector": "cpp",
         "ios": "cpp",
         "xstring": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "ostream": "cpp",
+        "xtree": "cpp"
     }
 }

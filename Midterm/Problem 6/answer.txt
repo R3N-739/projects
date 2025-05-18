@@ -1,0 +1,17 @@
+Time complexity of fibRec() recursive Fibonacci function:
+
+    The recursive Fibonacci function calls itself twice in its return statement. That means that with each call, two new branches are formed.
+    If we ignore base cases then for O()
+    n = 1: 2 calls
+    n = 2: 4 calls
+    n = 3: 8 calls
+    n = 4: 16 calls
+    upper bound calls = 2^n
+So, a good upper bound for the recursive Fibonacci function is O(2^n).
+
+
+Time complexity of fibLoop() non-recursive Fibonacci function:
+
+    The non recursive function loops through n-2 times after the base cases are not met. 
+    In worst case scenario the function will loop n-2 times. 
+    So, a good upper bound for the non-recursive Fibonacci function is O(n). //ignore -2

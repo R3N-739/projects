@@ -20,9 +20,10 @@ using namespace std;  //Library Scope
 int fibLoop(int);//Fibonacci Loop
 int fibRec(int);//Fibonacci Recursion
 int fibAray(int);//Utilize an Array
+int main2();//Second Main Function
 
 //Execution Starts Here
-int main(int argc, char** argv){
+int main(int, char**){
     //Set Random Number Seed Here
     
     //Declare Variables - Known and Unknown, units, range, description
@@ -41,6 +42,45 @@ int main(int argc, char** argv){
         cout<<"n = "<<n<<" f("<<n<<")="<<fibLoop(n)
                 <<"    Ratio = "<<fibLoop_i/fibLoop_im1<<endl;
                 
+    }
+    cout<<endl<<endl;
+
+    
+    //Clean up - File closing, memory deallocation, etc....
+
+    //Exit Stage Right!
+    main2();
+    return 0;
+}
+
+int main2(){
+    //Set Random Number Seed Here
+    
+    //Declare Variables - Known and Unknown, units, range, description
+    int nLoop;
+    
+    //Initialize Variables
+    nLoop=40;
+    
+    //Map inputs to outputs -> i.e. process the inputs
+    cout<<"Fibonacci Sequence"<<endl;
+    
+    //Display the outputs
+    for(int n=0;n<=nLoop;n++){
+        cout<<fibLoop(n)<<" ";
+    }
+    cout<<endl<<endl;
+    
+    //Display the outputs
+    for(int n=0;n<=nLoop;n++){
+        cout<<fibAray(n)<<" ";
+    }
+    cout<<endl<<endl;
+    
+    
+    //Display the outputs
+    for(int n=0;n<=nLoop;n++){
+        cout<<fibRec(n)<<" ";
     }
     cout<<endl<<endl;
 

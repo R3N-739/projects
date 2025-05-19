@@ -26,8 +26,8 @@ void smlLst(int [],int,int);
 void mrkSort(int [],int);
 int  linSrch(int [],int, int, int&);
 int  binSrch(int [],int, int, int&);
-void bublSrt(int [],int,int&);
-void selSort(int [],int,int&);
+void bublSrt(int [],int);
+void selSort(int [],int);
 void copyAry(int [],int [],int);
 
 //Program Execution Begins Here
@@ -39,35 +39,46 @@ int main(int argc, char** argv) {
     int perLine=10;
     int lowRng=100,highRng=200;
 
-    cout<<setw(5)<<left<<"n"<<right<<setw(30)<<"SelTime     SelCount"<<setw(30)<<"BubTime     BubCount"<<endl;
-
-    for(int n = 10; n <= 300; n += 10){
+    cout<<setw(5)<<"n"<<setw(5)<<"Lin"<<setw(5)<<"Bin"<<endl;
+    for(int n = 100; n <= 3000; n += 100){
     int array[n],brray[n];
-    int selcounter=0;
-    int bubcounter=0;
-            
+    int bincounter=0;
+    int lincounter=0;
+    
+        
     //Finish initializing the rest of the array
     fillAry(array,n,highRng,lowRng);
     copyAry(brray,array,n);
     
+    //Print the values in the array
+    //prntAry(array,SIZE,perLine);
+    //prntAry(brray,SIZE,perLine);
+    
+    //Sort the array the for all positions
+    //mrkSort(array,SIZE);
+    bublSrt(array,n);
+    selSort(brray,n);
+    
+    //Test the linear search by randomly choosing a value and
+    //determine if found;
     int value=rand()%(highRng-lowRng+1)+lowRng;
 
-
-
-    cout<<n;
-
+    cout<<setw(5)<<n;
+    //cout<<"Using the Linear Search"<<endl;
+    //cout<<"The value "<<value<<" was found at position "
+    //        <<linSrch(array,n,value,lincounter)<<endl;
     auto start = high_resolution_clock::now();
-    selSort(brray,n,selcounter);
+    linSrch(array,n,value,lincounter);
     auto end = high_resolution_clock::now();
-    cout<<setw(15)<<duration_cast<nanoseconds>(end - start).count();
-    cout<<setw(15)<<selcounter;
+    cout<<setw(5)<<duration_cast<nanoseconds>(end - start).count();
 
-
+    //cout<<"Using the Binary Search"<< endl;
+    //cout<<"The value "<<value<<" was found at position "
+    //        <<binSrch(brray,n,value,bincounter)<<endl;
     start = high_resolution_clock::now();
-    bublSrt(array,n,bubcounter);
+    binSrch(brray,n,value,bincounter);
     end = high_resolution_clock::now();
-    cout<<setw(15)<<duration_cast<nanoseconds>(end - start).count();
-    cout<<setw(15)<<bubcounter<<endl;
+    cout<<setw(5)<<duration_cast<nanoseconds>(end - start).count()<<endl;  
     }
 
     //Exit
@@ -80,7 +91,7 @@ void copyAry(int copyIt[],int source[],int n){
     }
 }
 
-void selSort(int a[],int n,int& count){
+void selSort(int a[],int n){
     //Loop and declare variables
     int indx,min;
     for(int pos=0;pos<n-1;pos++){
@@ -91,16 +102,14 @@ void selSort(int a[],int n,int& count){
                 min=a[i];
                 indx=i;
             }
-            count++;
         }
         //Perform the swap
         a[indx]=a[pos];
         a[pos]=min;
-        count++;
     }
 }
 
-void bublSrt(int a[],int n,int& count){
+void bublSrt(int a[],int n){
     //Keep looping and comparing until no swaps are left
     bool swap;
     do{
@@ -113,13 +122,33 @@ void bublSrt(int a[],int n,int& count){
                 a[i+1]=temp;
                 swap=true;
             }
-            count++;
         }
-        count++;
     }while(swap);
 }
 
+int  binSrch(int a[],int n, int val, int& counter){
+    //Initialize end points which are indexes
+    int lowEnd=0;
+    int highEnd=n-1;
+    //Loop until value found not indexes
+    do{
+        int middle=(highEnd+lowEnd)/2;
+        if(val==a[middle])return middle;
+        else if(val>a[middle])lowEnd=middle+1;
+        else highEnd=middle-1;
+        counter++;
+    }while(lowEnd<=highEnd);
+    //Not found
+    return -1;
+}
 
+int  linSrch(int a[],int n, int val, int& counter){
+    for(int indx=0;indx<n;indx++){
+        if(val==a[indx])return indx;
+        counter++; 
+    }
+    return -1;
+}
 
 void fillAry(int a[],int n,int hr,int lr){
     for(int indx=0;indx<n;indx++){
@@ -135,6 +164,12 @@ void prntAry(const int a[],int n,int perLine){
         if(indx%perLine==(perLine-1))cout<<endl;
     }
     cout<<endl;
+}
+
+void mrkSort(int a[],int n){
+    for(int pos=0;pos<n-1;pos++){
+        smlLst(a,n,pos);
+    }
 }
 
 void smlLst(int a[],int n,int pos){

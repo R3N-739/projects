@@ -14,45 +14,40 @@
 #include <ctime>
 #include <string>
 #include <sstream>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
 //User Libraries
 #include "Object.h"       //2D Object
 #include "SimpleVector.h" //Simple Vector only works with Classes
+#include "LinkedList.h"   //Linked List
 
-//Global Constants
-
-//Execution Begins Here!
-int main(int argc, char** argv) {
-    //Set the random number seed
+int main() {
     srand(static_cast<unsigned int>(time(0)));
-    
-    //Test an object
-    Object a(3),b(4);
-    
-    //Output the objects
-    cout<<"Test Object to put in front = ";
-    cout<<a;
-    cout<<"Test Object to put at   end = ";
-    cout<<b;
 
-    //Create a Simple Vector using Linked Lists
-    SimpleVector<Object> svp(a);
-    
-    //Fill the simple vector with 10 randomly size 2D Array Objects and
-    //print the last one
-    for(int i=0;i<10;i++){
-        int rSize=rand()%10;
-        Object c(rSize);
-        svp.push(c);
+    for (int n = 10; n <= 200; n += 10) {
+        // Step 1: Create an initial Object and initialize the SimpleVector
+        Object first(rand() % 10 + 2);
+        SimpleVector<Object> sv(first);  // Uses the const T& constructor
+
+        // Step 2: Start timing after the first object
+        auto start = high_resolution_clock::now();
+
+        for (int i = 1; i < n; i++) {  // Start from 1 because 1st object already pushed
+            Object obj(rand() % 10 + 2);
+            sv.push(obj);
+        }
+
+        auto end = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(end - start).count();
+
+        // Step 3: Output n, time, and operation count
+        cout << "n = " << n
+             << " | Time = " << duration << " μs"
+             << " | Operations = " << sv.getOperationCount()
+             << endl;
     }
-    
-    //End the Simple Vector using lists with object b
-    svp.push(b);
-    cout<<"Simple Vector Object size  = "<<svp.size()<<endl;
-    cout<<"Simple Vector Front Object =  "<<svp[0];
-    cout<<"Simple Vector End Object   =  "<<svp[svp.size()-1];
-    
-    //Exit*/
+
     return 0;
 }

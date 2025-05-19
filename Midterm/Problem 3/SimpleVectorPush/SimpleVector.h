@@ -20,6 +20,7 @@
      private:
         T *aptr;          // To point to the allocated array
         int arraySize;    // Number of elements in the array
+        int opCount=0;    // Number of operations
         void memError();  // Handles memory allocation errors
         void subError();  // Handles subscripts out of range
  
@@ -46,6 +47,9 @@
  
         // Access to return a specific element
         T getElementAt(int position);
+
+        // Access to return the number of operations
+        int getOperationCount() const {return opCount;}
  
         // Overloaded [] operator declaration
         T &operator[](const int &);
@@ -73,6 +77,7 @@
      //Fill the Array
      for (int count = 0; count < arraySize; count++){
          naptr[count]=aptr[count];
+         opCount++;
      }
      
      //Add new value and increment the array size

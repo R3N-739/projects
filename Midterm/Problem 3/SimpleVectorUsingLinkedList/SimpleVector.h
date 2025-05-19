@@ -22,8 +22,9 @@
         LinkedList<T> *aptr;  //Pointer to Linked List
         void memError();      // Handles memory allocation errors
         void subError();      // Handles subscripts out of range
+        int opCount = 0;      // Number of objects in the array
  
-     public:
+     public:         
         // Constructor declaration
         SimpleVector(const T &);
  
@@ -39,6 +40,8 @@
  
         // Access to return a specific element
         T getElementAt(int position);
+
+        int getOperationCount() const {return opCount;}
  
         // Overloaded [] operator declaration
         T &operator[](const int &);
@@ -55,6 +58,7 @@
  void SimpleVector<T>::push(const T &val){
      //Add a value into the Linked List
      aptr->addLst(val);
+     opCount++;
  }
  
  //***********************************************************

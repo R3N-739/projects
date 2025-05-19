@@ -16,6 +16,7 @@
          };
          Link *front,*next,*temp,*found;
          fndLst(const T&);  //Determine address of link that contains the data
+            //int opCount = 0;       //Number of links in the list
      public:
          LinkedList(const T&);
          ~LinkedList();
@@ -25,6 +26,8 @@
          int   cntLst();          //How many elements are in the list
          T     getObj(int);       //Return the object
          T    &getPtr(int);       //Return the pointer to the object
+        // int getOperationCount() const {return opCount;}
+
  };
  
  //000000001111111112222222222333333333344444444445555555555666666666677777777778
@@ -89,6 +92,8 @@
      add->data=data;            //Add the data
      add->linkPtr=NULL;         //Set the pointer to NULL
      end->linkPtr=add;         //Point to the new end of the list
+
+    // opCount++;          //Increment the number of links
  }
  
  //000000001111111112222222222333333333344444444445555555555666666666677777777778

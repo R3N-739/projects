@@ -7,62 +7,41 @@
  *           Also overloading the == operator in this version of Object
  */
 
-//System Libraries
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include <string>
 #include <sstream>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
-//User Libraries
-#include "Object.h"       //2D Objects
-#include "SimpleVector.h" //Simple Vector only works with Classes
+// Your includes
+#include "Object.h"
+#include "SimpleVector.h"
 
-//Global Constants
+int main() {
+    srand(static_cast<unsigned int>(time(0)));  // Seed random numbers once
 
-//Execution Begins Here!
-int main(int argc, char** argv) {
-    //Set the random number seed
-    srand(static_cast<unsigned int>(time(0)));
-    
-    //Test an object
-    Object a(3),b(4);
-    
-    //Test an object by populating the simple vector and print
-    SimpleVector<Object> svp(a);
-    cout<<"Simple Vector Object Size = "<<svp.mxSize()<<svp[svp.size()-1];
-    //Push an Object and printout the last object
-    svp.push(b);
-    cout<<"Simple Vector Push Size = "<<svp.mxSize()<<svp[svp.size()-1];
-    
-    //Fill the simple vector with 100 randomly size 2D Array Objects and
-    //print the last one
-    for(int i=0;i<100;i++){
-        int rSize=rand()%10;
-        Object c(rSize);
-        svp.push(c);
+    for (int n = 10; n <= 200; n += 10) {
+        SimpleVector<Object> sv;
+
+        auto start = high_resolution_clock::now();
+
+        for (int i = 0; i < n; i++) {
+            int rSize = rand() % 10 + 2;  // Object size at least 2
+            Object o(rSize);
+            sv.push(o);
+        }
+
+        auto end = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(end - start).count();
+
+        cout << "n = " << n
+             << " | Time = " << duration << " μs"
+             << " | Operations = " << sv.getOperationCount()
+             << endl;
     }
-    cout<<"Max Size and Size of the Simple Vector = "
-            <<svp.mxSize()<<" "<<svp.size()<<endl;
-    cout<<"The last object in the Vector is "<<endl;
-    cout<<svp[svp.size()-1];
-    
-    //Create another simple vector by copy constructor
-    SimpleVector<Object> csvp(svp);
-    cout<<"Max Size and Size of the Copy Constructed Simple Vector = "
-            <<csvp.mxSize()<<" "<<csvp.size()<<endl;
-    cout<<"The last object in the Vector is "<<endl;
-    cout<<csvp[csvp.size()-1];
- 
-    //Utilize a simple integer Simple Vector
-    int size=50;
-    SimpleVector<Object> svi(size);
-    cout<<"Last 2 values of the Simple Vector"<<endl;
-    cout<<"The Max Size and Size = "
-            <<svi.mxSize()<<" "<<svi.size()<<endl
-            <<svi[svi.size()-2]<<svi[svi.size()-1];
-    
-    //Exit
+
     return 0;
 }
